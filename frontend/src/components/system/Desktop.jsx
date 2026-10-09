@@ -1,60 +1,80 @@
-import React, { useEffect, useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import Icon from '../ui/Icon'
 import wallpaper from '../../assets/wallpapers/bgdesk.webp'
-import { useNavigate } from 'react-router-dom'
+import useWindowManager from '../window/useWindowManager'
+import WindowManager from '../window/WindowManager'
+import ProjectsApp from '../apps/ProjectsApp'
 
 const Desktop = () => {
   const [folders, setFolders] = useState([])
 
-  // 🔗 Fetch data from backend
+  const {
+    windows,
+    activeWindowId,
+    openWindow,
+    focusWindow,
+    minimizeWindow,
+    closeWindow,
+  } = useWindowManager();
+
   useEffect(() => {
     const fetchFolders = async () => {
       try {
         const res = await fetch('http://localhost:3001/apps')
         const data = await res.json()
-
-        // Optional: filter only visible apps
-        const visibleData = data.filter(item => item.visible)
-
-        setFolders(visibleData)
+        setFolders(data.filter(item => item.visible))
       } catch (err) {
-        console.error("Error fetching folders:", err)
+        console.error('Error fetching apps:', err)
       }
     }
 
     fetchFolders()
   }, [])
 
-  // 🚀 Open App Handler
-  const navigate = useNavigate()
+  const renderApp = (appWindow) => {
+    const appId = appWindow.appId.toLowerCase()
 
-  const handleOpenApp = (route) => {
-    navigate(route)
+    if (appId.includes('project')) {
+      return <ProjectsApp />
+    }
+
+    return (
+      <div>
+        <h2>{appWindow.title}</h2>
+        <p>This app window is ready to be implemented.</p>
+      </div>
+    )
   }
 
   return (
     <div className="desktop-root">
-
-      {/* Wallpaper */}
       <div
         className="desktop-wallpaper"
         style={{ backgroundImage: `url(${wallpaper})` }}
       />
 
-      {/* Icon Grid */}
       <div className="desktop-grid">
-        {folders.map((folder) => (
+        {folders.map(folder => (
           <Icon
-            key={folder._id}            // ✅ MongoDB ID
-            label={folder.label}        // ✅ DB field
-            // iconUrl={folder.icon}    // ✅ Use when icon is URL
-            onDoubleClick={() => handleOpenApp(folder.route)}
+            key={folder._id}
+            label={folder.label}
+            onDoubleClick={() => openWindow(folder)}
           />
         ))}
       </div>
 
+      <WindowManager
+        windows={windows}
+        activeWindowId={activeWindowId}
+        focusWindow={focusWindow}
+        minimizeWindow={minimizeWindow}
+        closeWindow={closeWindow}
+        renderApp={renderApp}
+      />
     </div>
   )
 }
 
 export default Desktop
+
