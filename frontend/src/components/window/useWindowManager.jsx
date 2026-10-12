@@ -99,6 +99,12 @@ const useWindowManager = () => {
       );
     }
   };
+  
+  const clearWindows = () => {
+    setWindows([]);
+    setActiveWindowId(null);
+  };
+
 
   return {
     windows,
@@ -108,6 +114,7 @@ const useWindowManager = () => {
     minimizeWindow,
     restoreWindow,
     closeWindow,
+    clearWindows,
   };
 };
 

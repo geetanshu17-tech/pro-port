@@ -2,21 +2,27 @@
 import { useEffect, useState } from 'react'
 import Icon from '../ui/Icon'
 import wallpaper from '../../assets/wallpapers/bgdesk.webp'
+import Taskbar from '../system/Taskbar'
 import useWindowManager from '../window/useWindowManager'
 import WindowManager from '../window/WindowManager'
 import ProjectsApp from '../apps/ProjectsApp'
 
-const Desktop = () => {
-  const [folders, setFolders] = useState([])
-
-  const {
+  const Desktop = ({
     windows,
     activeWindowId,
     openWindow,
     focusWindow,
     minimizeWindow,
+    restoreWindow,
     closeWindow,
-  } = useWindowManager();
+    clearWindows,
+    onSleep,
+    onSignOut,
+    onShutdown,
+  }) => {
+    const [folders, setFolders] = useState([]);
+
+  
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -72,6 +78,20 @@ const Desktop = () => {
         closeWindow={closeWindow}
         renderApp={renderApp}
       />
+
+      <Taskbar
+        apps={folders}
+        windows={windows}
+        activeWindowId={activeWindowId}
+        openWindow={openWindow}
+        focusWindow={focusWindow}
+        minimizeWindow={minimizeWindow}
+        restoreWindow={restoreWindow}
+        onSleep={onSleep}
+        onSignOut={onSignOut}
+        onShutdown={onShutdown}
+      />
+      
     </div>
   )
 }
