@@ -1,9 +1,11 @@
+
 @import "tailwindcss";
 
 @keyframes orbit {
   0% {
     offset-distance: 0%;
   }
+
   100% {
     offset-distance: 100%;
   }
@@ -18,118 +20,3 @@
   offset-path: path("M 50,25 A 25,25 0 1,1 49.9,25");
   animation: orbit 1.6s linear infinite;
 }
-
-/* ── Desktop Root ─────────────────────────────────────────────── */
-.desktop-root {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  user-select: none;
-}
-
-/* ── Wallpaper ────────────────────────────────────────────────── */
-.desktop-wallpaper {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  z-index: 0;
-}
-
-/* ── Icon Grid ────────────────────────────────────────────────── */
-/*
-  Fluid auto-fill grid: icons stack left-to-right, top-to-bottom.
-  📌 Change `align-content` to `flex-end` + `flex-direction: column`
-     if you want icons pinned to the top-left in a column (classic OS style).
-  📌 Add `grid-template-columns` with fixed columns if you want a strict layout.
-*/
-.desktop-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 88px); /* 📌 Adjust column width as needed */
-  grid-auto-rows: 96px;
-  align-content: start;   /* icons flow from the top */
-  gap: 4px;
-  padding: 12px;
-  /* Leave room at the bottom for the Taskbar (📌 adjust to match your Taskbar height) */
-  padding-bottom: 52px;
-}
-
-/* ── Single Desktop Icon ─────────────────────────────────────── */
-.desktop-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-  padding: 6px 4px 4px;
-  border-radius: 6px;
-  cursor: pointer;
-  outline: none;
-  transition: background 0.12s ease;
-}
-
-.desktop-icon:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.desktop-icon:focus {
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3);
-}
-
-/* ── Icon Image Wrapper ─────────────────────────────────────── */
-.icon-img-wrapper {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  padding: 2px;
-  transition: background 0.12s ease;
-}
-
-.icon-img-wrapper.selected {
-  background: rgba(100, 160, 255, 0.35);
-  box-shadow: 0 0 0 1px rgba(100, 160, 255, 0.6);
-}
-
-.icon-img {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-  /* Slight drop shadow to pop against any wallpaper */
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-  transition: transform 0.1s ease;
-}
-
-.desktop-icon:hover .icon-img {
-  transform: scale(1.08);
-}
-
-/* ── Icon Label ─────────────────────────────────────────────── */
-.icon-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: #fff;
-  text-align: center;
-  line-height: 1.3;
-  max-width: 80px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* Subtle text shadow so text is legible on any wallpaper */
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7);
-  padding: 1px 4px;
-  border-radius: 3px;
-  transition: background 0.12s ease;
-}
-
-.icon-label.selected {
-  background: rgba(100, 160, 255, 0.55);
-}
-

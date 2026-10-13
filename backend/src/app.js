@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const contentRoutes = require('./modules/content/content.routes');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/projects', contentRoutes);
 
 const port = process.env.PORT || 3001;
 

@@ -22,10 +22,15 @@ const LockScreen = () => {
   return (
     <div className="relative h-screen w-screen overflow-hidden">
 
-      <div className="absolute inset-0 
-        bg-[url('https://4kwallpapers.com/images/wallpapers/night-sky-colorful-1920x1080-12510.jpg')] 
-        bg-cover bg-center">
-      </div>
+      
+    <div
+      className="absolute inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage:
+          "url('https://4kwallpapers.com/images/wallpapers/night-sky-colorful-1920x1080-12510.jpg')",
+      }}
+    ></div>
+
 
       <div className="absolute inset-0 backdrop-blur-lg bg-black/40"></div>
 
@@ -45,9 +50,7 @@ const LockScreen = () => {
 
         <button
           onClick={() => navigate('/desktop')}
-          className="px-6 py-2 bg-white/20 backdrop-blur-md 
-                     border border-white/30 rounded-lg 
-                     hover:bg-white/30 transition">
+          className="rounded-lg border border-white/30 bg-white/20 px-6 py-2 backdrop-blur-md transition-colors duration-200 hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/60">
           Sign in
         </button>
 

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { RiShutDownLine } from "react-icons/ri";
 
@@ -49,54 +48,24 @@ const Taskbar = ({
     setSearch("");
   };
 
-  const buttonStyle = {
-    height: "42px",
-    minWidth: "42px",
-    padding: "0 10px",
-    border: "1px solid transparent",
-    borderRadius: "12px",
-    background: "transparent",
-    color: "#172033",
-    fontSize: "14px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "background 150ms ease",
-  };
+  // Shared base styles for all taskbar buttons.
+  const buttonClass =
+    "flex h-[42px] min-w-[42px] cursor-pointer items-center justify-center rounded-xl border border-transparent bg-transparent px-2.5 text-sm text-[#172033] transition-colors duration-150 hover:bg-white/40";
 
-  const panelStyle = {
-    position: "absolute",
-    bottom: "88px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: "min(440px, calc(100vw - 32px))",
-    maxHeight: "60vh",
-    overflowY: "auto",
-    padding: "20px",
-    borderRadius: "18px",
-    background: "rgba(235, 243, 253, 0.92)",
-    backdropFilter: "blur(28px)",
-    WebkitBackdropFilter: "blur(28px)",
-    border: "1px solid rgba(255,255,255,0.65)",
-    boxShadow: "0 12px 45px rgba(15,23,42,0.22)",
-    color: "#172033",
-    zIndex: 10000,
-  };
+  // Shared styles for app buttons in Start and Search panels.
+  const appButtonClass =
+    `${buttonClass} mb-1 w-full justify-start text-left`;
 
-  const appButtonStyle = {
-    ...buttonStyle,
-    width: "100%",
-    justifyContent: "flex-start",
-    marginBottom: "4px",
-    textAlign: "left",
-  };
+  
+  const panelClass =
+    "absolute bottom-[88px] left-1/2 z-[10000] max-h-[60vh] w-[min(440px,calc(100vw-32px))] -translate-x-1/2 overflow-y-auto rounded-[18px] border border-white/[0.65] bg-[#ebf3fd]/[0.92] p-5 text-[#172033] shadow-[0_12px_45px_rgba(15,23,42,0.22)] backdrop-blur-[28px]";
+
 
   return (
     <>
       {/* Start menu */}
       {startOpen && (
-        <div style={panelStyle}>
+        <div className={panelClass}>
           <h3 style={{ margin: "0 0 16px" }}>Your workspace</h3>
 
           <p style={{ fontSize: "13px", color: "#64748b" }}>
@@ -110,17 +79,12 @@ const Taskbar = ({
               <button
                 key={app._id || app.appId}
                 onClick={() => handleOpenApp(app)}
-                style={appButtonStyle}
+                className={appButtonClass}
               >
                 📁 {app.label}
+
                 {windows.some((win) => win.appId === app.appId) && (
-                  <span
-                    style={{
-                      marginLeft: "auto",
-                      color: "#64748b",
-                      fontSize: "12px",
-                    }}
-                  >
+                  <span className="ml-auto text-xs text-slate-500">
                     Open
                   </span>
                 )}
@@ -132,7 +96,7 @@ const Taskbar = ({
 
       {/* Search panel */}
       {searchOpen && (
-        <div style={panelStyle}>
+        <div className={panelClass}>
           <input
             autoFocus
             value={search}
@@ -141,22 +105,14 @@ const Taskbar = ({
               if (event.key === "Enter" && filteredApps.length > 0) {
                 handleOpenApp(filteredApps[0]);
               }
+
               if (event.key === "Escape") {
                 setSearchOpen(false);
                 setSearch("");
               }
             }}
             placeholder="Search apps..."
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "12px 14px",
-              border: "1px solid #cbd5e1",
-              borderRadius: "10px",
-              outline: "none",
-              background: "rgba(255,255,255,0.8)",
-              fontSize: "14px",
-            }}
+            className="box-border w-full rounded-[10px] border border-slate-300 bg-white/80 px-[14px] py-3 text-sm outline-none focus:border-blue-400"
           />
 
           <p style={{ fontSize: "13px", color: "#64748b" }}>
@@ -167,17 +123,12 @@ const Taskbar = ({
             <button
               key={app._id || app.appId}
               onClick={() => handleOpenApp(app)}
-              style={appButtonStyle}
+              className={appButtonClass}
             >
               📁 {app.label}
+
               {windows.some((win) => win.appId === app.appId) && (
-                <span
-                  style={{
-                    marginLeft: "auto",
-                    color: "#64748b",
-                    fontSize: "12px",
-                  }}
-                >
+                <span className="ml-auto text-xs text-slate-500">
                   Open
                 </span>
               )}
@@ -191,77 +142,39 @@ const Taskbar = ({
       )}
 
       {/* Power menu */}
-        {powerOpen && (
-          <div
-            style={{
-              position: "fixed",
-              right: "24px",
-              bottom: "94px",
-              width: "220px",
-              padding: "10px",
-              borderRadius: "16px",
-              background: "rgba(235, 243, 253, 0.92)",
-              backdropFilter: "blur(28px)",
-              WebkitBackdropFilter: "blur(28px)",
-              border: "1px solid rgba(255,255,255,0.65)",
-              boxShadow: "0 12px 45px rgba(15,23,42,0.22)",
-              zIndex: 10001,
-            }}
-          >
-            {[
-              { label: "Sleep", icon: "🌙" },
-              { label: "Sign out", icon: "↪" },
-              { label: "Shut down", icon: <RiShutDownLine /> },
-            ].map((item) => (
-              <button
-                key={item.label}
-                onClick={() => {
-                  setPowerOpen(false);
-                  if (item.label === "Sleep") onSleep?.();
-                  if (item.label === "Sign out") onSignOut?.();
-                  if (item.label === "Shut down") onShutdown?.();
+      {powerOpen && (
+        <div
+          className="fixed bottom-[94px] right-6 z-[10001] w-[220px] rounded-2xl border border-white/65 bg-[#ebf3fd]/[0.92] p-[10px] shadow-[0_12px_45px_rgba(15,23,42,0.22)] backdrop-blur-[28px]"
+        >
+          {[
+            { label: "Sleep", icon: "🌙" },
+            { label: "Sign out", icon: "↪" },
+            { label: "Shut down", icon: <RiShutDownLine /> },
+          ].map((item) => (
+            <button
+              key={item.label}
+              onClick={() => {
+                setPowerOpen(false);
 
-                }}
-                style={{
-                  ...buttonStyle,
-                  width: "100%",
-                  justifyContent: "flex-start",
-                  gap: "12px",
-                  marginBottom: "3px",
-                }}
-              >
-                <span style={{ width: "22px", textAlign: "center" }}>
-                  {item.icon}
-                </span>
-                {item.label}
-              </button>
-            ))}
-          </div>
-        )}
+                if (item.label === "Sleep") onSleep?.();
+                if (item.label === "Sign out") onSignOut?.();
+                if (item.label === "Shut down") onShutdown?.();
+              }}
+              className={`${buttonClass} mb-[3px] w-full justify-start gap-3`}
+            >
+              <span className="w-[22px] text-center">
+                {item.icon}
+              </span>
+
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Floating taskbar */}
       <div
-        style={{
-          position: "fixed",
-          bottom: "16px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "min(1050px, calc(100vw - 40px))",
-          height: "64px",
-          boxSizing: "border-box",
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)",
-          alignItems: "center",
-          padding: "0 14px",
-          gap: "12px",
-          borderRadius: "20px",
-          background: "rgba(220, 234, 251, 0.76)",
-          backdropFilter: "blur(30px) saturate(160%)",
-          WebkitBackdropFilter: "blur(30px) saturate(160%)",
-          border: "1px solid rgba(255,255,255,0.75)",
-          boxShadow: "0 8px 32px rgba(15,23,42,0.22)",
-          zIndex: 9999,
-        }}
+        className="fixed bottom-4 left-1/2 z-[9999] grid h-16 w-[min(1050px,calc(100vw-40px))] -translate-x-1/2 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 rounded-[20px] border border-white/75 bg-[#dceafb]/[0.76] px-3.5 shadow-[0_8px_32px_rgba(15,23,42,0.22)] backdrop-blur-[30px] backdrop-saturate-[160%]"
       >
         {/* Left information widget */}
         <div
@@ -274,10 +187,12 @@ const Taskbar = ({
           }}
         >
           <span style={{ fontSize: "23px" }}>💻</span>
+
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: "12px", fontWeight: 600 }}>
               Pro-Port
             </div>
+
             <div style={{ fontSize: "10px", color: "#475569" }}>
               Your workspace
             </div>
@@ -294,24 +209,21 @@ const Taskbar = ({
             minWidth: 0,
           }}
         >
+          {/* Start button */}
           <button
             title="Start"
             onClick={() => {
               setStartOpen((open) => !open);
               setSearchOpen(false);
             }}
-            style={{
-              ...buttonStyle,
-              background: startOpen
-                ? "rgba(255,255,255,0.65)"
-                : "transparent",
-              fontSize: "22px",
-              color: "#2563eb",
-            }}
+            className={`${buttonClass} text-[22px] text-blue-600 ${
+              startOpen ? "bg-white/[0.65]" : "bg-transparent"
+            }`}
           >
             ⊞
           </button>
 
+          {/* Search button */}
           <button
             title="Search"
             onClick={() => {
@@ -319,10 +231,10 @@ const Taskbar = ({
               setStartOpen(false);
               setSearch("");
             }}
-            style={{ ...buttonStyle, gap: "7px" }}
+            className={`${buttonClass} gap-[7px]`}
           >
             <span>⌕</span>
-            <span style={{ fontSize: "12px" }}>Search</span>
+            <span className="text-xs">Search</span>
           </button>
 
           {/* Only windows that have actually been opened */}
@@ -332,27 +244,18 @@ const Taskbar = ({
               title={win.title}
               aria-label={`${win.title}${win.isMinimized ? " (minimized)" : ""}`}
               onClick={() => handleAppClick(win)}
-              style={{
-                ...buttonStyle,
-                minWidth: "42px",
-                padding: "0 8px",
-                background:
-                  activeWindowId === win.id && !win.isMinimized
-                    ? "rgba(255,255,255,0.72)"
-                    : "transparent",
-                borderBottom:
-                  activeWindowId === win.id && !win.isMinimized
-                    ? "3px solid #2563eb"
-                    : win.isMinimized
-                      ? "3px solid #94a3b8"
-                      : "3px solid transparent",
-              }}
+              className={`${buttonClass} min-w-[42px] px-2 ${
+                activeWindowId === win.id && !win.isMinimized
+                  ? "bg-white/[0.72] border-b-[3px] border-b-blue-600"
+                  : win.isMinimized
+                    ? "border-b-[3px] border-b-slate-400"
+                    : "border-b-[3px] border-b-transparent"
+              }`}
             >
               📁
             </button>
           ))}
-        </div>    
-        
+        </div>
 
         {/* Right system tray and clock */}
         <div
@@ -365,9 +268,15 @@ const Taskbar = ({
             minWidth: 0,
           }}
         >
-          <span title="Network" style={{ fontSize: "14px" }}>◉</span>
-          <span title="Sound" style={{ fontSize: "14px" }}>🔊</span>
+          <span title="Network" style={{ fontSize: "14px" }}>
+            ◉
+          </span>
 
+          <span title="Sound" style={{ fontSize: "14px" }}>
+            🔊
+          </span>
+
+          {/* Clock and date */}
           <div
             title="Current date and time"
             style={{
@@ -386,6 +295,7 @@ const Taskbar = ({
                 minute: "2-digit",
               })}
             </span>
+
             <span>
               {time.toLocaleDateString([], {
                 day: "2-digit",
@@ -394,33 +304,23 @@ const Taskbar = ({
               })}
             </span>
           </div>
-          <button
-          title="Power options"
-          aria-label="Power options"
-          onClick={() => {
-            setPowerOpen((open) => !open);
-            setStartOpen(false);
-            setSearchOpen(false);
-          }}
-          style={{
-            ...buttonStyle,
-            flexShrink: 0,
-            width: "38px",
-            minWidth: "38px",
-            height: "38px",
-            padding: 0,
-            fontSize: "21px",
-            color: "#172033",
-            borderRadius: "10px",
-            background: powerOpen
-              ? "rgba(255,255,255,0.75)"
-              : "transparent",
-          }}
-        >
-          <RiShutDownLine />
-        </button>
 
-        </div>        
+          {/* Power toggle */}
+          <button
+            title="Power options"
+            aria-label="Power options"
+            onClick={() => {
+              setPowerOpen((open) => !open);
+              setStartOpen(false);
+              setSearchOpen(false);
+            }}
+            className={`${buttonClass} h-[38px] w-[38px] min-w-[38px] shrink-0 rounded-[10px] p-0 text-[21px] ${
+              powerOpen ? "bg-white/[0.75]" : "bg-transparent"
+            }`}
+          >
+            <RiShutDownLine />
+          </button>
+        </div>
       </div>
     </>
   );

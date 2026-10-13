@@ -54,13 +54,13 @@ import ProjectsApp from '../apps/ProjectsApp'
   }
 
   return (
-    <div className="desktop-root">
+    <div className="relative h-screen w-screen select-none overflow-hidden">
       <div
-        className="desktop-wallpaper"
+        className="absolute inset-0 z-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${wallpaper})` }}
       />
 
-      <div className="desktop-grid">
+      <div className="absolute inset-0 z-[1] grid grid-cols-[repeat(auto-fill,88px)] auto-rows-[96px] content-start gap-1 p-3 pb-[52px]">
         {folders.map(folder => (
           <Icon
             key={folder._id}
